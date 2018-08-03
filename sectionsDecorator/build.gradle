@@ -28,7 +28,7 @@ androidExtensions {
 }
 
 dependencies {
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation libs.recyclerView
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 }
 repositories {

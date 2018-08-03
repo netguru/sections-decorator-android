@@ -78,9 +78,11 @@ class SectionDecorator(private val context: Context) : RecyclerView.ItemDecorati
                     }
 
                     //draw title for section
-                    headerView!!.text = sectionTitle
-                    fixLayoutSize(headerView!!, parent)
-                    drawHeader(canvas, headerView!!, lineStart, lineEnd, sectionTitle)
+                    headerView?.apply {
+                        text = sectionTitle
+                        fixLayoutSize(this, parent)
+                        drawHeader(canvas, this, lineStart, lineEnd, sectionTitle)
+                    }
                 }
     }
 
