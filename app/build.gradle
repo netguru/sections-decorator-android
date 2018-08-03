@@ -148,6 +148,8 @@ configurations {
 
 dependencies {
 
+    implementation project(":sectionsDecorator")
+
     //Kotlin
     implementation libs.kotlin
 
