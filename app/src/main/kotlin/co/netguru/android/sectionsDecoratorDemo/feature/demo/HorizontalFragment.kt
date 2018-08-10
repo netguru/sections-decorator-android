@@ -7,13 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import co.netguru.android.sectionsDecoratorDemo.R
-import co.netguru.android.sectionsDecoratorDemo.feature.demo.MyAdapter
 import co.netguru.sectionsDecorator.SectionDecorator
 import kotlinx.android.synthetic.main.fragment_horizontal.*
 
 class HorizontalFragment : Fragment(){
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return LayoutInflater.from(context).inflate(R.layout.fragment_horizontal, container, false)
+        return inflater.inflate(R.layout.fragment_horizontal, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
