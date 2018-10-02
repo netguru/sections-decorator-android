@@ -39,14 +39,14 @@ sonarqube {
 
     ext {
         sonarConfig = [
-                projectName : "Android Template", //project name as displayed in SonarQube
+                projectName : "Sections decorator android", //project name as displayed in SonarQube
                 analysisMode: (bitrise.cli.isPr) ? "preview" : "publish", //preview is required for github plugin
-                githubRepo  : "netguru/netguru-android-template" //optional - github plugin repo
+                githubRepo  : "netguru/sections-decorator-android" //optional - github plugin repo
         ]
     }
 
     properties {
-        def libraries = project.android.sdkDirectory.getPath() + "/platforms/android-25/android.jar,"
+        def libraries = project.android.sdkDirectory.getPath() + "/platforms/android-27/android.jar,"
         // required metadata for sonarqube
         property "sonar.login", keyProperty('SONAR_ACCESS_TOKEN') //access token as login
         property "sonar.projectKey", sonarConfig.applicationId
