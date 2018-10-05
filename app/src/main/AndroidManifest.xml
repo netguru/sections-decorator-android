@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:tools="http://schemas.android.com/tools"
-    package="co.netguru.android.sectionsDecoratorDemo"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="co.netguru.android.sectionsDecoratorDemo">
 
     <application
         android:name="co.netguru.android.sectionsDecoratorDemo.application.App"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         tools:ignore="GoogleAppIndexingWarning">
 
@@ -21,8 +22,8 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".feature.demo.DemoActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat"
-            android:name=".feature.demo.DemoActivity" />
+            android:theme="@style/AppTheme" />
     </application>
 </manifest>

@@ -1,14 +1,10 @@
 package co.netguru.android.sectionsDecoratorDemo.application
 
 import android.content.Context
-import android.os.Handler
-import android.os.StrictMode
 import co.netguru.android.sectionsDecoratorDemo.application.scope.AppScope
 import com.facebook.stetho.Stetho
-import com.frogermcs.androiddevmetrics.AndroidDevMetrics
 import com.github.moduth.blockcanary.BlockCanary
 import com.github.moduth.blockcanary.BlockCanaryContext
-import com.nshmura.strictmodenotifier.StrictModeNotifier
 import com.squareup.leakcanary.LeakCanary
 import timber.log.Timber
 import javax.inject.Inject
@@ -38,9 +34,6 @@ class DebugMetricsHelper @Inject constructor() {
         }
         LeakCanary.install(context.applicationContext as App)
 
-        // AndroidDevMetrics
-        AndroidDevMetrics.initWith(context)
-
         // Stetho
         Stetho.initialize(
             Stetho.newInitializerBuilder(context)
@@ -48,23 +41,6 @@ class DebugMetricsHelper @Inject constructor() {
                 .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(context))
                 .build()
         )
-
-        // StrictMode
-        StrictModeNotifier.install(context)
-        Handler().post({
-            val threadPolicy = StrictMode.ThreadPolicy.Builder().detectAll()
-                .permitDiskReads()
-                .permitDiskWrites()
-                .penaltyLog() // Must!
-                .build()
-            StrictMode.setThreadPolicy(threadPolicy)
-
-            val vmPolicy = StrictMode.VmPolicy.Builder()
-                .detectAll()
-                .penaltyLog() // Must!
-                .build()
-            StrictMode.setVmPolicy(vmPolicy)
-        })
 
         //Timber
         Timber.plant(Timber.DebugTree())

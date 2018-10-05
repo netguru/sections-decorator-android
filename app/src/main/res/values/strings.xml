@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Demo</string>
+    <string name="app_name">Sections decorator</string>
+    <string name="vertical">Vertical</string>
+    <string name="horizontal">Horizontal</string>
 </resources>

@@ -6,18 +6,20 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.support.annotation.ColorRes
 import android.support.annotation.LayoutRes
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
-import kotlin.math.max
-import kotlin.math.min
 
 
 class SectionDecorator(private val context: Context) : RecyclerView.ItemDecoration() {
 
-    private val headerVerticalOffset by lazy { context.resources.getDimensionPixelSize(R.dimen.header_vertical_offset) }
+    private val headerVerticalOffset by lazy {
+        context.resources.getDimensionPixelSize(R.dimen.header_vertical_offset).toFloat()
+    }
     private val headerToLineOffset by lazy {
         context.resources.getDimensionPixelSize(R.dimen.header_to_line_offset).toFloat()
     }
@@ -25,6 +27,8 @@ class SectionDecorator(private val context: Context) : RecyclerView.ItemDecorati
 
     private var headerView: TextView? = null
     private var headerLayoutId: Int = R.layout.section_header
+
+    private var painter: Painter? = null
 
     init {
         linePaint.color = context.getColorCompat(android.R.color.black)
@@ -52,7 +56,40 @@ class SectionDecorator(private val context: Context) : RecyclerView.ItemDecorati
         state: RecyclerView.State?
     ) {
         super.getItemOffsets(outRect, view, parent, state)
-        outRect.top = headerVerticalOffset
+        createPainter(parent)
+
+        painter?.getOutRect(outRect)
+
+    }
+
+    override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State?) {
+        super.onDrawOver(canvas, parent, state)
+        val adapter = getSectionsAdapter(parent)
+
+        createPainter(parent)
+
+        if (headerView == null) createHeaderView(parent)
+
+        val sectionsList = parent.asSequence()
+            .map {
+                Pair(adapter.getSectionTitleForPosition(parent.getChildAdapterPosition(it)), it)
+            }.fold(mapOf<String, List<View>>()) { acc, data ->
+                acc.addToValueList(data.first, data.second)
+            }.toList()
+
+        nullCheck2(painter, headerView) { painter, headerView ->
+            sectionsList.forEachIndexed { index, (sectionTitle, sectionsVisibleElements) ->
+                painter.paint(
+                    canvas,
+                    index,
+                    sectionTitle,
+                    sectionsVisibleElements,
+                    headerView,
+                    sectionsList.size,
+                    parent
+                )
+            }
+        }
     }
 
     private fun getSectionsAdapter(parent: RecyclerView): SectionsAdapterInterface {
@@ -65,56 +102,17 @@ class SectionDecorator(private val context: Context) : RecyclerView.ItemDecorati
         fixLayoutSize(headerView!!, parent)
     }
 
-    override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State?) {
-        super.onDrawOver(canvas, parent, state)
-        val adapter = getSectionsAdapter(parent)
-
-        if (headerView == null) createHeaderView(parent)
-
-        val sectionsList = parent.asSequence()
-            .map {
-                Pair(adapter.getSectionTitleForPosition(parent.getChildAdapterPosition(it)), it)
-            }.fold(mapOf<String, List<View>>()) { acc, data ->
-                acc.addToValueList(data.first, data.second)
-            }.toList()
-
-        sectionsList.forEachIndexed { index, (sectionTitle, sectionsVisibleElements) ->
-            //draw line for section
-
-            val first = sectionsVisibleElements.first()
-            val leftMargin =
-                (first.layoutParams as ViewGroup.MarginLayoutParams).leftMargin.toFloat()
-            val last = sectionsVisibleElements.last()
-            val rightMargin =
-                (last.layoutParams as ViewGroup.MarginLayoutParams).rightMargin.toFloat()
-
-            val lineStart = if (index == 0) {
-                leftMargin
+    private fun createPainter(parent: RecyclerView) {
+        if (painter == null) {
+            if (parent.layoutManager !is LinearLayoutManager) {
+                throw IllegalArgumentException("Section decorator only works with linear layout manager")
             } else {
-                max(first.left.toFloat(), leftMargin)
-            }
-
-            val lineEnd = if (index == sectionsList.size - 1) {
-                canvas.width.toFloat() - rightMargin
-            } else {
-                min(last.right.toFloat(), canvas.width.toFloat() - rightMargin)
-            }
-
-            if (lineEnd > lineStart) {
-                canvas.drawLine(
-                    lineStart,
-                    headerToLineOffset,
-                    lineEnd,
-                    headerToLineOffset,
-                    linePaint
-                )
-            }
-
-            //draw title for section
-            headerView?.apply {
-                text = sectionTitle
-                fixLayoutSize(this, parent)
-                drawHeader(canvas, this, lineStart, lineEnd, index)
+                painter =
+                        if ((parent.layoutManager as LinearLayoutManager).orientation == LinearLayout.HORIZONTAL) {
+                            HorizontalPainter(::fixLayoutSize, headerToLineOffset, linePaint)
+                        } else {
+                            VerticalPainter(::fixLayoutSize, headerVerticalOffset, linePaint)
+                        }
             }
         }
     }
@@ -126,33 +124,6 @@ class SectionDecorator(private val context: Context) : RecyclerView.ItemDecorati
             if (currentPosition < count) return getSectionTitleAt(i)
         }
         throw IndexOutOfBoundsException("try to get index=$currentPosition from items lenght=$count")
-    }
-
-    private fun drawHeader(
-        canvas: Canvas,
-        headerView: View,
-        start: Float,
-        end: Float,
-        sectionIndex: Int
-    ) {
-
-        val headerWidth = with(headerView) {
-            width + paddingStart + paddingEnd +
-                    with(layoutParams as ViewGroup.MarginLayoutParams) {
-                        marginStart + marginEnd
-                    }
-        }
-
-        val startPosition = if (end - start < headerWidth && sectionIndex == 0) {
-            end - headerWidth
-        } else {
-            start
-        }
-
-        canvas.save()
-        canvas.translate(startPosition, 0f)
-        headerView.draw(canvas)
-        canvas.restore()
     }
 
     /**

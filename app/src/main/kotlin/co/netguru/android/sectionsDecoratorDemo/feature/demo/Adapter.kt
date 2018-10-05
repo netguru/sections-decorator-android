@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import co.netguru.android.sectionsDecoratorDemo.R
 import co.netguru.sectionsDecorator.SectionsAdapterInterface
 import kotlinx.android.synthetic.main.list_item_horizontal.view.*
@@ -19,7 +20,11 @@ class MyAdapter(val orientation: Int) : RecyclerView.Adapter<MyViewHolder>(),
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val layout =  R.layout.list_item_horizontal
+        val layout = if (orientation == LinearLayout.HORIZONTAL) {
+            R.layout.list_item_horizontal
+        } else {
+            R.layout.list_item_vertical
+        }
         return MyViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false))
     }
 
@@ -29,7 +34,10 @@ class MyAdapter(val orientation: Int) : RecyclerView.Adapter<MyViewHolder>(),
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val sectionNameOfItem = items.entries.flatMap { entry -> entry.value.map { Pair(entry.key, it) } }[position].first
-        holder.bind(items.values.flatten()[position], items.keys.toList().indexOf(sectionNameOfItem))
+        holder.bind(
+            items.values.flatten()[position],
+            items.keys.asSequence().toList().indexOf(sectionNameOfItem)
+        )
     }
 
     override fun getSectionsCount(): Int {
@@ -49,7 +57,7 @@ class MyViewHolder(val view: View): RecyclerView.ViewHolder(view){
     private val textView = view.item_text!!
 
     fun bind(text: String, section: Int){
-        if(section == 0){
+        if (section.rem(2) == 0) {
             view.setBackgroundColor(Color.CYAN)
         } else {
             view.setBackgroundColor(Color.LTGRAY)

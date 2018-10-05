@@ -22,7 +22,7 @@ android {
     buildToolsVersion "27.0.3"
 
     defaultConfig {
-        applicationId "co.netguru.android.template"
+        applicationId "co.netguru.android.sectionsDecorator"
         minSdkVersion 18
         targetSdkVersion 27
         versionCode isBitrise ? Integer.parseInt(bitrise.io.buildNumber) : 1
@@ -129,6 +129,7 @@ dependencies {
     // Support
     implementation libs.appCompat
     implementation libs.recyclerView
+    implementation libs.design
 
     // MVP
     implementation(libs.mosby) {
@@ -176,9 +177,6 @@ dependencies {
 
     // BlockCanary
     debugImplementation libs.blockCanary
-
-    // StrictMode
-    debugImplementation libs.strictmodeNotifier
 
     // Unit testing
     testImplementation test.junit

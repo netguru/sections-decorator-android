@@ -1,4 +1,4 @@
-package co.netguru.android.template.application
+package co.netguru.android.sectionsDecoratorDemo.application
 
 import io.reactivex.exceptions.UndeliverableException
 import timber.log.Timber

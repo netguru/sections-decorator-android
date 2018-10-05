@@ -1,7 +1,7 @@
-package co.netguru.android.template.application
+package co.netguru.android.sectionsDecoratorDemo.application
 
 import android.content.Context
-import co.netguru.android.template.application.scope.AppScope
+import co.netguru.android.sectionsDecoratorDemo.application.scope.AppScope
 import javax.inject.Inject
 
 /**

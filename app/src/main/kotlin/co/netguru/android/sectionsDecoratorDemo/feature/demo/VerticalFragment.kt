@@ -10,19 +10,24 @@ import co.netguru.android.sectionsDecoratorDemo.R
 import co.netguru.sectionsDecorator.SectionDecorator
 import kotlinx.android.synthetic.main.fragment_horizontal.*
 
-class HorizontalFragment : Fragment(){
+class VerticalFragment : Fragment() {
+
     companion object {
-        val TAG = HorizontalFragment::class.java.simpleName!!
-        fun createFragment() = HorizontalFragment()
+        val TAG = VerticalFragment::class.java.simpleName!!
+        fun createFragment() = VerticalFragment()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_horizontal, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_vertical, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView.adapter = MyAdapter(LinearLayout.HORIZONTAL)
+        recyclerView.adapter = MyAdapter(LinearLayout.VERTICAL)
         recyclerView.addItemDecoration(SectionDecorator(context!!).apply {
             setLineColor(R.color.green)
             setLineWidth(15f)
