@@ -22,6 +22,7 @@ buildscript {
         // There is a problem with this plugin when using Gradle Plugin >= 3.0.0-alpha3
         // https://jira.sonarsource.com/browse/SONARGRADL-41
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.1"
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     }
 }
 
