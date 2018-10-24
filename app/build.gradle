@@ -9,14 +9,6 @@ apply plugin: 'org.sonarqube'
 apply plugin: 'com.vanniktech.android.junit.jacoco'
 apply from: '../buildsystem/sonarqube.gradle'
 
-ext {
-
-    secrets = [
-            // define your app secrets, for example:
-            // hockeyAppId: keyProperty("HOCKEY_APP_ID")
-    ]
-}
-
 android {
     compileSdkVersion 27
 
@@ -25,7 +17,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 27
         versionCode isBitrise ? Integer.parseInt(bitrise.io.buildNumber) : 1
-        versionName '0.1.0'
+        versionName '0.1.1'
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

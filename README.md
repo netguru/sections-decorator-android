@@ -16,7 +16,7 @@ repositories {
 ```
 2. Add library dependency
 ```groovy
-implementation 'com.github.netguru:sections-decorator-android:0.1.0'
+implementation 'com.github.netguru:sections-decorator-android:0.1.1'
 ```
  
 3. implement SectionsAdapterInterface in your RecyclerView adapter
